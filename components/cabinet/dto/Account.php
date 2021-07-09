@@ -35,7 +35,7 @@ class Account extends Dto
     public $token;
 
     /**
-     * @return array
+     * @return Intercom[]
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\httpclient\Exception
      */

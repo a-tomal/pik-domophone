@@ -29,6 +29,11 @@ class Intercom extends Dto
 
     public Account $account;
 
+    /**
+     * @return bool
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
+     */
     public function unlock(): bool
     {
         return IntercomRepository::unlock($this->id, $this->account->token);
