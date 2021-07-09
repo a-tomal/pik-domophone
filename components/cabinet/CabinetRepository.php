@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\components;
+namespace app\components\cabinet;
 
 
 use yii\helpers\Json;

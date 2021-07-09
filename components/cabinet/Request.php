@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\components;
+namespace app\components\cabinet;
 
 
 class Request extends \yii\httpclient\Request
