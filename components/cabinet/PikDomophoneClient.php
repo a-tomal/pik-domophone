@@ -7,7 +7,7 @@ namespace app\components\cabinet;
 use yii\httpclient\Client;
 use yii\httpclient\JsonParser;
 
-class IntercomClient extends Client
+class PikDomophoneClient extends Client
 {
     public $baseUrl = 'https://intercom.pik-comfort.ru/api/';
     public $requestConfig = [

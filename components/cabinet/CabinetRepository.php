@@ -5,6 +5,7 @@ namespace app\components\cabinet;
 
 
 use app\components\cabinet\dto\Account;
+use app\components\cabinet\dto\Intercom;
 
 class CabinetRepository
 {
@@ -13,7 +14,7 @@ class CabinetRepository
      * @param $password
      * @param $udid
      * @param false $force
-     * @return Account|null
+     * @return array|false|object|null
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\httpclient\Exception
@@ -24,7 +25,7 @@ class CabinetRepository
             return Account::find($username);
         }
 
-        $client = new IntercomClient();
+        $client = new PikDomophoneClient();
         $response = $client->createRequest()
             ->setMethod('POST')
             ->setUrl('customers/sign_in')
@@ -49,5 +50,36 @@ class CabinetRepository
         }
 
         return null;
+    }
+
+    /**
+     * @param $apartmentId
+     * @param $userToken
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
+     */
+    public static function getIntercoms($apartmentId, $userToken): array
+    {
+        $client = new PikDomophoneClient();
+        $response = $client->createRequest()
+            ->setMethod('GET')
+            ->setUrl("customers/properties/{$apartmentId}/intercoms")
+            ->addHeaders([
+                'Authorization' => "Bearer $userToken"
+            ])
+            ->send();
+
+        if ($response->isOk && ($data = $response->getData())) {
+            $intercoms = [];
+
+            foreach ($data as $intercom) {
+                $intercoms[] = Intercom::hydrate($intercom);
+            }
+
+            return $intercoms;
+        }
+
+        return [];
     }
 }

@@ -4,9 +4,8 @@
 namespace app\components\cabinet\dto;
 
 
-use yii\base\BaseObject;
+use app\components\cabinet\CabinetRepository;
 use yii\base\Exception;
-use yii\helpers\Inflector;
 use yii\helpers\Json;
 
 /**
@@ -23,7 +22,7 @@ use yii\helpers\Json;
  * @property $email
  * @property $token
  */
-class Account extends BaseObject
+class Account extends Dto
 {
     public $id;
     public $apartmentId;
@@ -35,35 +34,20 @@ class Account extends BaseObject
     public $email;
     public $token;
 
-    /**
-     * @param array|null $hydrateData
-     * @return static|null
-     * @throws \yii\base\InvalidConfigException
-     */
-    public static function hydrate(array $hydrateData = null): ?self
+    public function getIntercoms()
     {
-        if ($hydrateData && isset($hydrateData['account'])) {
-            $account = $hydrateData['account'];
-            $keys = array_map(static fn($key) => Inflector::variablize($key), array_keys($account));
-            $data = array_combine($keys, array_values($account));
-            $data['class'] = self::class;
-
-            return \Yii::createObject($data);
-        }
-
-        return null;
+        return CabinetRepository::getIntercoms($this->apartmentId, $this->token);
     }
 
     /**
      * @param string $phone
-     * @return $this
+     * @return array|false|object
      * @throws Exception
-     * @throws \yii\base\InvalidConfigException
      */
-    public static function find(string $phone): self
+    public static function find(string $phone)
     {
         if (static::isExistsUserData($phone) && ($data = static::getUserData($phone))) {
-            return static::hydrate($data);
+            return static::hydrate($data['account'] ?? []);
         }
 
         throw new Exception('User data not found');

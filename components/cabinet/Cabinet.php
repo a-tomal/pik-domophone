@@ -4,6 +4,7 @@
 namespace app\components\cabinet;
 
 
+use app\components\cabinet\dto\Account;
 use yii\base\Component;
 
 class Cabinet extends Component
@@ -13,13 +14,15 @@ class Cabinet extends Component
     public $udid;
 
     public $cabinetRepository;
+    public ?Account $account;
 
     public function __construct($config = [])
     {
         parent::__construct($config);
 
         $this->cabinetRepository = new CabinetRepository();
+        $this->account = $this->cabinetRepository->login($this->username, $this->password, $this->udid);
 
-        var_dump($this->cabinetRepository->login($this->username, $this->password, '1'));
+        $this->account->getIntercoms();
     }
 }
