@@ -44,22 +44,22 @@ class CabinetRepository
 
     protected function isUserDataExists($username): bool
     {
-        $filePath = \Yii::getAlias('@app') . DIRECTORY_SEPARATOR . $username . '.json';
+        $filePath = sprintf('@cabinet/%s.json', $username);
 
-        return file_exists($filePath);
+        return file_exists(\Yii::getAlias($filePath));
     }
 
     protected function saveUserData($username, $data): void
     {
-        $filePath = \Yii::getAlias('@app') . DIRECTORY_SEPARATOR . $username . '.json';
+        $filePath = sprintf('@cabinet/%s.json', $username);
 
-        file_put_contents($filePath, Json::encode($data));
+        file_put_contents(\Yii::getAlias($filePath), Json::encode($data));
     }
 
     protected function getUserData($username): array
     {
-        $filePath = \Yii::getAlias('@app') . DIRECTORY_SEPARATOR . $username . '.json';
+        $filePath = sprintf('@cabinet/%s.json', $username);
 
-        return Json::decode(file_get_contents($filePath));
+        return Json::decode(file_get_contents(\Yii::getAlias($filePath)));
     }
 }

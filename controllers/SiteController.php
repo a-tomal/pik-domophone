@@ -11,7 +11,8 @@ class SiteController extends Controller
 {
     public function actionIndex()
     {
-        var_dump(\Yii::getAlias('@cabinet'));
+        $filePath = sprintf('@cabinet/%s.json', 1);
+        var_dump(\Yii::getAlias($filePath));
 //        file_put_contents(\Yii::getAliases('@app') . 'test', 1);
 //        Json::encode(1);
 

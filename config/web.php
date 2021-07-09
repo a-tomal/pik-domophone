@@ -14,9 +14,6 @@ $config = [
         '@cabinet' => '@app/components/cabinet/cache'
     ],
     'components' => [
-        'cabinet' => [
-            'class' => Cabinet::class,
-        ],
         'request' => [
             'cookieValidationKey' => 'AfYqCWeH729gXM-sbdc0xO0F5c_QzY9b',
         ],

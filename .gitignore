@@ -1,6 +1,7 @@
 .idea
-Thumbs.db
-/vendor
 .DS_Store
-phpunit.phar
+vendor
 runtime
+Thumbs.db
+phpunit.phar
+config/local.php
