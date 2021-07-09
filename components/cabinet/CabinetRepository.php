@@ -4,16 +4,24 @@
 namespace app\components\cabinet;
 
 
-use yii\helpers\Json;
+use app\components\cabinet\dto\Account;
 
 class CabinetRepository
 {
-    public function login($username, $password, $udid, $force = false): ?string
+    /**
+     * @param $username
+     * @param $password
+     * @param $udid
+     * @param false $force
+     * @return Account|null
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
+     */
+    public function login($username, $password, $udid, $force = false): ?Account
     {
-        if (!$force && $this->isUserDataExists($username)) {
-            $data = $this->getUserData($username);
-
-            return $data['token'] ?? null;
+        if (!$force && Account::isExistsUserData($username)) {
+            return Account::find($username);
         }
 
         $client = new IntercomClient();
@@ -33,33 +41,13 @@ class CabinetRepository
             $tmp = explode(' ', $authorization) ?? null;
 
             $token = $tmp[1] ?? null;
-            $data['token'] = $token;
-            $this->saveUserData($username, $data);
+            $data['account']['token'] = $token;
 
-            return $token;
+            Account::saveUserData($username, $data);
+
+            return Account::find($username);
         }
 
         return null;
-    }
-
-    protected function isUserDataExists($username): bool
-    {
-        $filePath = sprintf('@cabinet/%s.json', $username);
-
-        return file_exists(\Yii::getAlias($filePath));
-    }
-
-    protected function saveUserData($username, $data): void
-    {
-        $filePath = sprintf('@cabinet/%s.json', $username);
-
-        file_put_contents(\Yii::getAlias($filePath), Json::encode($data));
-    }
-
-    protected function getUserData($username): array
-    {
-        $filePath = sprintf('@cabinet/%s.json', $username);
-
-        return Json::decode(file_get_contents(\Yii::getAlias($filePath)));
     }
 }
