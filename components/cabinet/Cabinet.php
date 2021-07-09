@@ -13,16 +13,28 @@ class Cabinet extends Component
     public $password;
     public $udid;
 
-    public $cabinetRepository;
-    public ?Account $account;
+    protected $cabinetRepository;
+    protected $account;
 
     public function __construct($config = [])
     {
         parent::__construct($config);
 
         $this->cabinetRepository = new CabinetRepository();
-        $this->account = $this->cabinetRepository->login($this->username, $this->password, $this->udid);
+    }
 
-        $this->account->getIntercoms();
+    /**
+     * @return Account
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
+     */
+    public function getAccount(): Account
+    {
+        if (null === $this->account) {
+            $this->account = $this->cabinetRepository->login($this->username, $this->password, $this->udid);
+        }
+
+        return $this->account;
     }
 }

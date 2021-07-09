@@ -4,6 +4,8 @@
 namespace app\controllers;
 
 
+use app\components\cabinet\Cabinet;
+use app\components\cabinet\DeviceCategory;
 use app\components\cabinet\dto\Account;
 use yii\web\Controller;
 
@@ -11,13 +13,18 @@ class SiteController extends Controller
 {
     public function actionIndex()
     {
+        /** @var Cabinet $cabinet */
+        $cabinet = \Yii::$app->cabinet;
+        $account = $cabinet->getAccount();
 
+        $r = $account->getIntercoms(DeviceCategory::CALL_PANEL);
 
-//        $r = Account::hydrate(json_decode(file_get_contents(\Yii::getAlias('@app/components/cabinet/cache/+79114970004.json')),1));
-//var_dump($r);
+//        $r = $account->getIntercoms()[0]->unlock();
 
+        var_dump($r);
 
-        \Yii::$app->cabinet;
+exit;
+
         exit;
     }
 

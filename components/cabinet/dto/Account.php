@@ -4,7 +4,7 @@
 namespace app\components\cabinet\dto;
 
 
-use app\components\cabinet\CabinetRepository;
+use app\components\cabinet\IntercomRepository;
 use yii\base\Exception;
 use yii\helpers\Json;
 
@@ -34,9 +34,29 @@ class Account extends Dto
     public $email;
     public $token;
 
-    public function getIntercoms()
+    /**
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
+     */
+    public function getIntercoms($includeOnly = []): array
     {
-        return CabinetRepository::getIntercoms($this->apartmentId, $this->token);
+        $context = $this;
+        $intercoms = IntercomRepository::list($this->apartmentId, $this->token);
+
+        if (!is_array($includeOnly)) {
+            $includeOnly = [$includeOnly];
+        }
+
+        if ($includeOnly) {
+            $intercoms = array_filter($intercoms, static fn($value) => in_array(($value->deviceCategory ?? null), $includeOnly));
+        }
+
+        return array_map(static function ($intercom) use ($context) {
+            $intercom->account = $context;
+
+            return $intercom;
+        }, $intercoms);
     }
 
     /**
@@ -44,7 +64,7 @@ class Account extends Dto
      * @return array|false|object
      * @throws Exception
      */
-    public static function find(string $phone)
+    public static function find(string $phone): Account
     {
         if (static::isExistsUserData($phone) && ($data = static::getUserData($phone))) {
             return static::hydrate($data['account'] ?? []);
