@@ -5,4 +5,3 @@ runtime
 Thumbs.db
 phpunit.phar
 config/local.php
-components/cabinet/cache
