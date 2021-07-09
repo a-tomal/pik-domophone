@@ -8,6 +8,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
+        '@bower' => '@vendor/bower-asset',
         '@app' => dirname(__DIR__),
         '@cabinet' => '@app/components/cabinet/cache'
     ],

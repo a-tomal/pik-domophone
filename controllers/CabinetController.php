@@ -19,22 +19,17 @@ class CabinetController extends Controller
         try {
             $account = $cabinet->getAccount();
             $intercoms = $account->getIntercoms(DeviceCategory::CALL_PANEL);
-            $result = false;
+            $result = true;
 
             foreach ($intercoms as $intercom) {
-                $results *= $intercom->unlock();
+                $result *= $intercom->unlock();
             }
 
-            return $result;
+            return (bool)$result;
         } catch (\Exception $e) {
             \Yii::error($e->getMessage());
 
             throw new ServerErrorHttpException();
         }
-    }
-
-    public function actionError()
-    {
-        return 'Error';
     }
 }
