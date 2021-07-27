@@ -6,6 +6,7 @@ namespace app\controllers;
 
 use app\components\cabinet\Cabinet;
 use app\components\cabinet\DeviceCategory;
+use app\components\cabinet\dto\Intercom;
 use yii\rest\Controller;
 use yii\web\ServerErrorHttpException;
 
@@ -31,5 +32,24 @@ class CabinetController extends Controller
 
             throw new ServerErrorHttpException();
         }
+    }
+
+    public function actionRtspStreamUri()
+    {
+        $cabinet = \Yii::$app->cabinet;
+        $rtsp = [];
+
+        try {
+            $account = $cabinet->getAccount();
+            $intercoms = $account->getIntercoms(DeviceCategory::CALL_PANEL);
+
+            /** @var Intercom $intercom */
+            foreach ($intercoms as $intercom) {
+                $rtsp[] = $intercom->video[0]['source'] ?? '';
+            }
+        } catch (\Exception $e) {
+        }
+
+        return $rtsp;
     }
 }

@@ -40,6 +40,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'GET /stream/list' => 'cabinet/rtsp-stream-uri'
             ],
         ],
     ],
